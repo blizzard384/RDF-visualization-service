@@ -50,7 +50,7 @@
             <table class="table borderless" ng-show="showOptions">
                <tr>
                   <th>Complex clustering:<br>Cluster not only neighbour nodes but all nodes connected to clicked one. But only if edges lead from clicked node.<br>Also when you uncluster by clicking node all connected nodes with other connections will be clustered.<br>(Only when you click on node)</th>
-                  <th>Select classes which instances will be clustered; You can select multiple types</th>
+                  <th>Select which types will be clustered; You can select multiple types</th>
                <tr>
                   <td>
                      <input type="checkbox" class="form-control" checked onchange="complexCluster.call()" value="true">
@@ -66,7 +66,7 @@
                   </td>
                </tr>
             </table>
-            <div><b>Tips: Click on the node to cluster it by outcoming connections; Click on cluster to uncluster; Drag nodes to reorganize; Pinch or scroll to zoom;<b></div>
+            <div><b>Tips: Click on the node to cluster it by outcoming connections; Click on cluster to uncluster; Drag nodes to reorganize; Pinch or scroll to zoom;</b></div>
             <div>
                <div ng-repeat="(key, value) in prefixes">{{key}}:{{value}}</div>
             </div>
