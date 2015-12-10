@@ -3,7 +3,7 @@ package cz.vse.rdf.controller;
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
-public class AjaxResponse<T> implements Serializable{
+public class AjaxResponse<T> implements Serializable {
 	
 	public final T content;
 	public final Code code;

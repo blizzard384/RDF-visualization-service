@@ -1,4 +1,4 @@
-package cz.vse.rdf.service.impl;
+package cz.vse.rdf.service;
 
 import java.io.Serializable;
 

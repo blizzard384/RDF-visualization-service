@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import cz.vse.rdf.service.Graph;
 import cz.vse.rdf.service.ServiceManager;
-import cz.vse.rdf.service.impl.Graph;
 
 @RestController
 @RequestMapping("/api/rest/latest")

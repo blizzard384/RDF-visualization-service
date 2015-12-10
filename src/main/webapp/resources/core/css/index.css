@@ -10,3 +10,11 @@
 .input-group .form-control.form-control-md {
 	width: 80%;
 }
+
+.borderless>tbody>tr>td, .borderless th {
+    border: none;
+}
+
+.form-control.form-control-lg {
+	width: 500px;
+}

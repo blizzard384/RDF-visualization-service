@@ -16,10 +16,26 @@ app.controller('graphController', function($scope, $http) {
     $scope.graphUrl = 'http://www.w3schools.com/xml/rdf-schema.xml';
     $scope.graphLoading = false;
     $scope.graphPrefixes = null;
-    $scope.graphError = null;
+    $scope.graphError = '.';
     $scope.graphContentType = $scope.graphContentTypes[0];
-    $scope.networkCluster = null;
+    $scope.graphTypes = null;
+    $scope.showOptions = false;
 
+    $scope.showOptionsTrigger = function() {
+    	$scope.showOptions = !$scope.showOptions;
+    }
+    
+    $scope.color = function (type, types) {
+    	var retVal = null;
+    	types.forEach(function(iType) {
+    		if (iType.value == type) {
+    			retVal = iType.color;
+    			return;
+    		}
+    	});
+    	
+    	return retVal;
+    }
     
     $scope.graph = function() {
     	$scope.graphLoading = true;
@@ -35,18 +51,30 @@ app.controller('graphController', function($scope, $http) {
     		}
     		
     		$scope.prefixes = content.prefixes;
+    		$scope.graphTypes = content.types;
+    		
     		
     		var nodesArray = [];
     		var edgesArray = [];
+    		var colors = ['#006699', '#0066cc', '#009933', '#009966', '#009999', '#0099cc', '#0099ff'];
+    		var defColor = '#00ffff';
+    		
+    		
+    		$scope.graphTypes.forEach(function(type) {
+    			type.color = colors.shift();
+    		});
     		
     		content.nodes.forEach(function(node) {
-    			var graphNode = { id : node.value, label : node.value, cid : node.type };
-    			console.log(graphNode);
+    			var size = node.connections*10;
+    			var shape = node.resourceType != 'LITERAL' ? 'dot' : 'diamond';
+    			var color = node.type ? $scope.color(node.type, $scope.graphTypes) : defColor;
+    			
+    			var graphNode = { id : node.value, label : node.value, cid : node.type, size : size, shape : shape, color : color };
     			nodesArray.push(graphNode);
     		});
     		
     		content.edges.forEach(function(edge) {
-    			var graphEdge = { from : edge.from, to : edge.to, label : edge.label , arrows : "to" };
+    			var graphEdge = { from : edge.from, to : edge.to, label : edge.label , arrows : "to", font : { size : 10 }, color : { inherit : 'from', opacity : 0.3} };
     			edgesArray.push(graphEdge);
     		});
     		
@@ -56,7 +84,6 @@ app.controller('graphController', function($scope, $http) {
     				nodes: nodes,
     				edges: edges
     		};
-    		console.log(data);
     	
     		var options = {
     					"layout" : { 

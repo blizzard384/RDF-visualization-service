@@ -1,4 +1,4 @@
-package cz.vse.rdf.service.impl;
+package cz.vse.rdf.service;
 
 import java.io.Serializable;
 
@@ -7,11 +7,40 @@ public class SerializableNode implements Serializable {
 	
 	public final String value;
 	public final String type;
+	public final ResourceType resourceType;
+	private int connections;
 	
-	public SerializableNode(String value, String type) {
+	public SerializableNode(String value, String type, ResourceType resourceType) {
 		super();
 		this.value = value;
 		this.type = type;
+		this.resourceType = resourceType;
+		this.connections = 1;
+	}
+	
+	public SerializableNode(String value, String type, ResourceType resourceType, int connections) {
+		super();
+		this.value = value;
+		this.type = type;
+		this.resourceType = resourceType;
+		this.connections = connections;
+	}
+	
+	public void setConnections(int connections) {
+		this.connections = connections;
+	}
+	
+	public static enum ResourceType {
+		LITERAL,
+		RESOURCE;
+	}
+	
+	public int getConnections() {
+		return connections;
+	}
+	
+	public void addConnection() {
+		connections++;
 	}
 
 	@Override
