@@ -12,7 +12,7 @@ function contains(val, arr) {
 
 app.controller('graphController', function($scope, $http) {
     var baseUrl = '/api/rest/latest/';
-    $scope.graphContentTypes = ['RDF/XML', 'HTML', 'XML'];
+    $scope.graphContentTypes = ['RDF/XML', 'HTML', 'N-TRIPLE', 'TURTLE', 'N3'];
     $scope.graphUrl = 'http://www.w3schools.com/xml/rdf-schema.xml';
     $scope.graphLoading = false;
     $scope.graphPrefixes = null;

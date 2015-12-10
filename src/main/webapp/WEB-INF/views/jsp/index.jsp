@@ -66,7 +66,7 @@
                   </td>
                </tr>
             </table>
-            <div><i>Tips: Click on the node to cluster it by outcoming connections; Click on cluster to uncluster; Drag nodes to reorganize; Pinch or scroll to zoom;<i></div>
+            <div><b>Tips: Click on the node to cluster it by outcoming connections; Click on cluster to uncluster; Drag nodes to reorganize; Pinch or scroll to zoom;<b></div>
             <div>
                <div ng-repeat="(key, value) in prefixes">{{key}}:{{value}}</div>
             </div>

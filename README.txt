@@ -1,0 +1,17 @@
+Functionality:
+- Visualize RDF document from URL
+- Each node has size based on outgoing connections
+- Each node has color based on RDF type
+- Clustering:
+- - Clustering by type:
+- - - Select in options menu instances of classes to cluster (basicaly cluster same colors)
+- - - When u select something all other clusters will be broken
+- - Cluster by connections:
+- - - Click on node to cluster; All nodes connected to clicked node will be clustered. Connections are directed so only nodes connected FROM clicked node will be clustered.
+- - - Trigger complex clustering in options
+- - - In not complex clustering; only nodes directly connected to clicked node will be clustered
+- - - In complex clustering mode:
+- - - - If you click on node all nodes will be searched if they are connected to clicked node (again, connections are directed) and will be clustered if they are
+- - - - Calculations have exponential complexity (Is it possible to implement it better?); It works fine on hundreds of nodes and edges but won't work on large datasets
+- - - - If you click on cluster, nodes connected (again, directed) to cluster origin (node clicked on when creating cluster) with other connections (again, directed) will be clustered
+- - - There is small bug; when node is selected it cannot be unclustered; just deselect node and click again 
