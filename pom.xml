@@ -27,11 +27,10 @@
    </exclusions>
   </dependency>
   <dependency>
-	<groupId>org.freehep</groupId>
-	<artifactId>freehep-graphicsio-svg</artifactId>
-	<version>2.4</version>
-</dependency>
-
+   <groupId>org.freehep</groupId>
+   <artifactId>freehep-graphicsio-svg</artifactId>
+   <version>2.4</version>
+  </dependency>
   <!-- Need this for json to/from object -->
   <dependency>
    <groupId>com.fasterxml.jackson.core</groupId>
@@ -95,6 +94,56 @@
    <scope>provided</scope>
   </dependency>
  </dependencies>
+ <profiles>
+  <profile>
+   <id>openshift</id>
+   <build>
+    <finalName>rdfvis</finalName>
+    <plugins>
+     <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-compiler-plugin</artifactId>
+      <version>3.3</version>
+      <configuration>
+       <source>${jdk.version}</source>
+       <target>${jdk.version}</target>
+      </configuration>
+     </plugin>
+     <plugin>
+      <artifactId>maven-war-plugin</artifactId>
+      <version>2.4</version>
+      <configuration>
+       <outputDirectory>webapps</outputDirectory>
+       <warName>ROOT</warName>
+       <failOnMissingWebXml>false</failOnMissingWebXml>
+      </configuration>
+     </plugin>
+     <plugin>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-maven-plugin</artifactId>
+      <version>9.2.11.v20150529</version>
+      <configuration>
+       <scanIntervalSeconds>10</scanIntervalSeconds>
+       <webApp>
+        <contextPath>/</contextPath>
+       </webApp>
+      </configuration>
+     </plugin>
+     <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-eclipse-plugin</artifactId>
+      <version>2.10</version>
+      <configuration>
+       <downloadSources>true</downloadSources>
+       <downloadJavadocs>true</downloadJavadocs>
+       <wtpversion>2.0</wtpversion>
+       <wtpContextName>rdf</wtpContextName>
+      </configuration>
+     </plugin>
+    </plugins>
+   </build>
+  </profile>
+ </profiles>
  <build>
   <plugins>
    <plugin>
@@ -106,13 +155,13 @@
      <target>${jdk.version}</target>
     </configuration>
    </plugin>
- <plugin>
+   <plugin>
     <artifactId>maven-war-plugin</artifactId>
     <version>2.4</version>
     <configuration>
-        <failOnMissingWebXml>false</failOnMissingWebXml>
+     <failOnMissingWebXml>false</failOnMissingWebXml>
     </configuration>
-</plugin>
+   </plugin>
    <plugin>
     <groupId>org.eclipse.jetty</groupId>
     <artifactId>jetty-maven-plugin</artifactId>
