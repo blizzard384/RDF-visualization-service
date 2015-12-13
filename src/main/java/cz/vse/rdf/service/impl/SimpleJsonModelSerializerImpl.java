@@ -18,7 +18,6 @@ import cz.vse.rdf.service.Graph;
 import cz.vse.rdf.service.ModelSerializer;
 import cz.vse.rdf.service.SerializableEdge;
 import cz.vse.rdf.service.SerializableNode;
-import cz.vse.rdf.service.SerializableNode.ResourceType;
 
 
 
@@ -42,36 +41,33 @@ public class SimpleJsonModelSerializerImpl implements ModelSerializer {
 			Node predicate = stmt.asTriple().getPredicate();
 			Node object = stmt.asTriple().getObject();
 			
-			ResourceType objectType = object.isLiteral() ? ResourceType.LITERAL : ResourceType.RESOURCE;
-			SerializableNode objectNode = new SerializableNode(object.toString(model), null, objectType);
+			SerializableNode objectNode = new SerializableNode(object.toString(model), null, 0);
+			String literal = predicate.toString(model) + " > " + object.toString(model);
+			SerializableNode subjectNode = new SerializableNode(subject.toString(model), null, object.isLiteral() ? 0 : 1);
 			
-			if (!nodes.contains(objectNode)) {
-				nodes.add(objectNode);
-			}
-			
-			ResourceType subjectType = subject.isLiteral() ? ResourceType.LITERAL : ResourceType.RESOURCE;
-			SerializableNode subjectNode = new SerializableNode(subject.toString(model), null, subjectType);
-			
-			if (predicate.toString().equals(RDF_TYPE)) {
-				subjectNode = new SerializableNode(subject.toString(model), object.toString(model), subjectType);
-				
-				int connections = 1;
-				int index = nodes.indexOf(subjectNode);
-				if (index != -1) {
-					connections = nodes.get(index).getConnections();
-				}
-				
-				subjectNode.setConnections(connections);
-				nodes.remove(subjectNode);
-				nodes.add(subjectNode);
-				types.add(objectNode);
-			} else if (!nodes.contains(subjectNode)) {
-				nodes.add(subjectNode);
+			if (object.isLiteral()) {
+				subjectNode.addLiteral(literal);
 			} else {
-				nodes.get(nodes.indexOf(subjectNode)).addConnection();
+				edges.add(new SerializableEdge(subject.toString(model), predicate.toString(model), object.toString(model)));
+				if (!nodes.contains(objectNode)) {
+					nodes.add(objectNode);
+				}
 			}
 			
-			edges.add(new SerializableEdge(subject.toString(model), predicate.toString(model), object.toString(model)));
+			if (nodes.contains(subjectNode)) {
+				SerializableNode node = nodes.get(nodes.indexOf(subjectNode));
+				if (predicate.toString().equals(RDF_TYPE)) {
+					node.setType(object.toString(model));
+					types.add(objectNode);
+				}
+				if (object.isLiteral()) {
+					node.addLiteral(literal);
+				} else {
+					node.addConnection();
+				}
+			} else {
+				nodes.add(subjectNode);
+			}
 		}
 		
 		return new Graph(nodes, edges, prefixes, types);

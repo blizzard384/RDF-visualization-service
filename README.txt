@@ -16,15 +16,22 @@ TO-DOs:
 
 Functionality:
 - Visualize RDF document from URL
+- - enter URL and select content type of returned data
 - Each node has size based on outgoing connections
 - Each node has color based on RDF type
+- Literals are shown in tooltip (mouseover)
+- Full URIs are shown in tooltip (mouseover)
 - Clustering:
+- - Break cluster by clicking on it
+- - number in [ ] represents number of outgoing connections
 - - Clustering by type:
+- - - These clusters has square shape
 - - - Select in options menu nodes of type (connected via rdf:Type) to cluster (basicaly cluster same colors)
 - - - When u select something all other clusters will be broken
 - - - You can select more types to cluster
 - - - If only one node would belong to cluster nothing will happen
 - - Cluster by connections:
+- - - These clusters have diamond shape
 - - - Click on node to cluster; All nodes connected to clicked node will be clustered. Connections are directed so only nodes connected FROM clicked node will be clustered.
 - - - Trigger complex clustering in options
 - - - In not complex clustering; only nodes directly connected to clicked node will be clustered

@@ -9,7 +9,7 @@ function createGraph(element, datas, options) {
 	graph = new vis.Network(container, data, options);
 	graph
 			.on(
-					"selectNode",
+					'selectNode',
 					function(params) {
 						if (params.nodes.length == 1) {
 							var clusterId = params.nodes[0];
@@ -26,11 +26,15 @@ function createGraph(element, datas, options) {
 								try {
 									clusterByConnection(params.nodes[0]);
 								} catch (error) {
+									console.log(error);
 									alert('Cannot perform operation, data set is too large. Disable complex clustering.');
 								}
 							}
 						}
 					});
+	graph.on('dragEnd', function(params) {
+		graph.selectNodes([]);
+	});
 
 }
 
@@ -45,10 +49,9 @@ function getConnected(id) {
 }
 
 function isConnected(from, to, complex) {
-	if (from == to) {
+	if (from.id == to.id) {
 		return true;
 	}
-
 	if (to.visited === true) {
 		return false;
 	}
@@ -56,18 +59,20 @@ function isConnected(from, to, complex) {
 	to.visited = true;
 
 	var retVal = false;
-	to.edges.forEach(function(edge) {
-		if (edge.from == from && edge.to == to) {
+	
+	for (var i = 0; i < to.edges.length; i++) {
+		var edge = to.edges[i];
+		if (edge.from.id == from.id && edge.to.id == to.id) {
 			retVal = true;
-			return;
+			break;
 		}
-		if (edge.to == to && complex) {
+		if (edge.to.id == to.id && complex) {
 			retVal = isConnected(from, edge.from, complex);
-			if (retVal == true) {
-				return;
+			if (retVal === true) {
+				break;
 			}
 		}
-	});
+	}
 
 	to.visited = false;
 
@@ -86,21 +91,23 @@ function clusterByConnection(id) {
 			}
 		});
 	}
-
 	var clusterOptionsByData = {
 		joinCondition : function(childOptions) {
-
-			return isConnected(idNode, graph.findNode(childOptions.id)[0],
+			var childNode = graph.findNode(childOptions.id)[0];
+			childNode.visited = false;
+			var con = isConnected(idNode, childNode,
 					complexClustering);
+			return con;
 		},
 		processProperties : function(clusterOptions, childNodes) {
-			clusterOptions.label = id + " [" + childNodes.length + "]";
+			clusterOptions.label = idNode.options.label + " [" + childNodes.length + "]";
+			clusterOptions.title = idNode.options.title;
 			return clusterOptions;
 		},
 		clusterNodeProperties : {
 			id : 'ID' + id,
 			borderWidth : 3,
-			shape : 'box'
+			shape : 'diamond'
 		}
 	}
 
@@ -139,7 +146,7 @@ function clusterType(type) {
 		clusterNodeProperties : {
 			id : 'CID' + type,
 			borderWidth : 3,
-			shape : 'box'
+			shape : 'square'
 		}
 	}
 	graph.cluster(clusterOptionsByData);

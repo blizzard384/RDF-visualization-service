@@ -47,10 +47,59 @@
          {{graphError}}
          <div ng-hide="graphLoading || graphError">
          	<span><a href="#" ng-click="showOptionsTrigger()">Options</a></span>
+         	<span><a href="#" ng-click="showHelpTrigger()">Help</a></span>
+         	<table class="table borderless" ng-show="showHelp">
+         		<tr><td>
+Functionality:
+<ul>
+<li> Visualize RDF document from URL
+	<ul>
+		<li> enter URL and select content type of returned data</li>
+	</ul>
+</li>
+<li> Each node has size based on outgoing connections</li>
+<li> Each node has color based on RDF type</li>
+<li> Literals are shown in tooltip (mouseover)</li>
+<li> Full URIs are shown in tooltip (mouseover)</li>
+<li> Number of literals are shown in ( ) brackets</li>
+<li> Clustering:
+	<ul>
+		<li> Break cluster by clicking on it</li>
+		<li> number in [ ] represents number of outgoing connections</li>
+		<li> Clustering by type:
+			<ul>
+				<li> These clusters has square shape</li>
+				<li> Select in options menu nodes of type (connected via rdf:Type) to cluster (basicaly cluster same colors)</li>
+				<li> When u select something all other clusters will be broken</li>
+				<li> You can select more types to cluster</li>
+				<li> If only one node would belong to cluster nothing will happen</li>
+			</ul>
+		</li>
+		<li>	Cluster by connections:
+			<ul>
+				<li> These clusters have diamond shape</li>
+				<li> Click on node to cluster; All nodes connected to clicked node will be clustered. Connections are directed so only nodes connected FROM clicked node will be clustered.</li>
+				<li> Trigger complex clustering in options</li>
+				<li> In not complex clustering; only nodes directly connected to clicked node will be clustered</li>
+				<li> In complex clustering mode:
+					<ul>
+						<li> If you click on node all nodes will be searched if they are connected to clicked node (again, connections are directed) and will be clustered if they are</li>
+						<li> Calculations have exponential complexity (Is it possible to implement it better?); It works fine on hundreds of nodes and edges but won't work on large datasets</li>
+						<li> If you click on cluster, nodes connected (again, directed) to cluster origin (node clicked on when creating cluster) with other connections (again, directed) will be clustered</li>
+					</ul>
+				</li>
+				<li> There is small bug; when node is selected it cannot be unclustered; just deselect node and click again </li>
+			</ul>
+		</li>
+	</ul>
+</li>
+</ul>
+         		</td></tr>
+         	</table>
             <table class="table borderless" ng-show="showOptions">
                <tr>
-                  <th>Complex clustering:<br>Cluster not only neighbour nodes but all nodes connected to clicked one. But only if edges lead from clicked node.<br>Also when you uncluster by clicking node all connected nodes with other connections will be clustered.<br>(Only when you click on node)</th>
-                  <th>Select which types will be clustered; You can select multiple types</th>
+                  <th>Complex clustering:</th>
+                  <th>Cluster by type:</th>
                <tr>
                   <td>
                      <input type="checkbox" class="form-control" checked onchange="complexCluster.call()" value="true">

@@ -11,7 +11,7 @@ function contains(val, arr) {
 }
 
 app.controller('graphController', function($scope, $http) {
-    var baseUrl = '/api/rest/latest/';
+    var baseUrl = 'api/rest/latest/';
     $scope.graphContentTypes = ['HTML','RDF/XML', 'N-TRIPLE', 'TURTLE', 'N3'];
     $scope.graphUrl = 'http://www.w3.org/2001/sw/grddl-wg/td/hCardFabien-RDFa.html';
     $scope.graphLoading = false;
@@ -20,8 +20,15 @@ app.controller('graphController', function($scope, $http) {
     $scope.graphContentType = $scope.graphContentTypes[0];
     $scope.graphTypes = null;
     $scope.showOptions = false;
+    $scope.showHelp = false;
 
+    $scope.showHelpTrigger = function() {
+    	$scope.showOptions = false;
+    	$scope.showHelp = !$scope.showHelp;
+    }
+    
     $scope.showOptionsTrigger = function() {
+    	$scope.showHelp = false;
     	$scope.showOptions = !$scope.showOptions;
     }
     
@@ -65,11 +72,18 @@ app.controller('graphController', function($scope, $http) {
     		});
     		
     		content.nodes.forEach(function(node) {
-    			var size = node.connections*10;
-    			var shape = node.resourceType != 'LITERAL' ? 'dot' : 'diamond';
+    			var size = node.connections >= 1 ? node.connections > 1 ? node.connections*10 : 15 : 5;
+    			var shape =  'dot';
+    			var title = node.value;
+    			node.literals.forEach(function(lit) {
+    				title = title + '<br>' + lit;
+    			});
     			var color = node.type ? $scope.color(node.type, $scope.graphTypes) : defColor;
     			
-    			var graphNode = { id : node.value, label : node.value, cid : node.type, size : size, shape : shape, color : color };
+    			var graphNode = { id : node.value, label : node.label, cid : node.type, size : size, shape : shape, color : color, title : title};
+    			if (node.literals.length > 0) {
+    				graphNode.label = graphNode.label + ' (' + node.literals.length + ')';
+    			}
     			nodesArray.push(graphNode);
     		});
     		
@@ -86,13 +100,17 @@ app.controller('graphController', function($scope, $http) {
     		};
     	
     		var options = {
-    					"layout" : { 
-    						"randomSeed" : 2 },
-    				  "physics": {
-    				    "barnesHut": {
-    				      "springLength": 400
-    				    }
-    				  }
+    					"layout" : {
+    						"randomSeed" : 2 
+    						},
+    						"physics": {
+    						    "barnesHut": {
+    						      "gravitationalConstant": -3000,
+    						      "springLength": 300,
+    						      "avoidOverlap": 0.1
+    						    },
+    						    "minVelocity": 0.9
+    						  }
     				}
     		
     		createGraph('graph-container', data, options);
