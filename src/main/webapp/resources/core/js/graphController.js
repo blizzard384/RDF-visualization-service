@@ -12,7 +12,7 @@ function contains(val, arr) {
 
 app.controller('graphController', function($scope, $http) {
     var baseUrl = 'api/rest/latest/';
-    $scope.graphContentTypes = ['HTML','RDF/XML', 'N-TRIPLE', 'TURTLE', 'N3'];
+    $scope.graphContentTypes = ['XHTML', 'HTML','RDF/XML', 'N-TRIPLE', 'TURTLE', 'N3'];
     $scope.graphUrl = 'http://www.w3.org/2001/sw/grddl-wg/td/hCardFabien-RDFa.html';
     $scope.graphLoading = false;
     $scope.graphPrefixes = null;
