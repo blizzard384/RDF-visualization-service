@@ -21,15 +21,24 @@ app.controller('graphController', function($scope, $http) {
     $scope.graphTypes = null;
     $scope.showOptions = false;
     $scope.showHelp = false;
+    $scope.rawRdf = null;
+    $scope.showRdf = false;
 
     $scope.showHelpTrigger = function() {
     	$scope.showOptions = false;
+    	$scope.showRdf = false;
     	$scope.showHelp = !$scope.showHelp;
     }
     
     $scope.showOptionsTrigger = function() {
     	$scope.showHelp = false;
+    	$scope.showRdf = false;
     	$scope.showOptions = !$scope.showOptions;
+    }
+    $scope.showRdfTrigger = function() {
+    	$scope.showHelp = false;
+    	$scope.showOptions = false;
+    	$scope.showRdf = !$scope.showRdf;
     }
     
     $scope.color = function (type, types) {
@@ -59,6 +68,7 @@ app.controller('graphController', function($scope, $http) {
     		
     		$scope.prefixes = content.prefixes;
     		$scope.graphTypes = content.types;
+    		$scope.rawRdf = content.rawRdf;
     		
     		
     		var nodesArray = [];

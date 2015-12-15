@@ -3,13 +3,14 @@ package cz.vse.rdf.service;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @SuppressWarnings("serial")
 public class SerializableNode implements Serializable {
 	
 	private final String value;
 	private String type;
-	private Collection<Serializable> literals;
+	private List<Serializable> literals;
 	private int connections;
 	private final String label;
 	
@@ -18,7 +19,7 @@ public class SerializableNode implements Serializable {
 		
 	}
 	
-	public SerializableNode(String value, String type, int connections, Collection<Serializable> literals) {
+	public SerializableNode(String value, String type, int connections, List<Serializable> literals) {
 		super();
 		this.value = value;
 		this.type = type;
@@ -47,12 +48,16 @@ public class SerializableNode implements Serializable {
 		return label;
 	}
 
-	public void setLiterals(Collection<Serializable> literals) {
+	public void setLiterals(List<Serializable> literals) {
 		this.literals = literals;
 	}
 
 	public void addLiteral(Serializable lit) {
 		literals.add(lit);
+	}
+	
+	public void addFirstLiteral(Serializable lit) {
+		literals.add(0, lit);
 	}
 	
 	public Collection<Serializable> getLiterals() {

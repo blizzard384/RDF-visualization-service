@@ -1,5 +1,7 @@
 package cz.vse.rdf.service.impl;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,6 +27,7 @@ import cz.vse.rdf.service.SerializableNode;
 public class SimpleJsonModelSerializerImpl implements ModelSerializer {
 	
 	private static final String RDF_TYPE = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
+	private static final String RDF_OUT_FORMAT = "TURTLE";
 
 	@Override
 	public Graph serialize(Model model) {
@@ -45,8 +48,10 @@ public class SimpleJsonModelSerializerImpl implements ModelSerializer {
 			String literal = predicate.toString(model) + " > " + object.toString(model);
 			SerializableNode subjectNode = new SerializableNode(subject.toString(model), null, object.isLiteral() ? 0 : 1);
 			
-			if (object.isLiteral()) {
-				subjectNode.addLiteral(literal);
+			boolean isType = predicate.toString().equals(RDF_TYPE);
+			
+			if (object.isLiteral() || isType) {
+				subjectNode.addFirstLiteral(literal);
 			} else {
 				edges.add(new SerializableEdge(subject.toString(model), predicate.toString(model), object.toString(model)));
 				if (!nodes.contains(objectNode)) {
@@ -56,7 +61,8 @@ public class SimpleJsonModelSerializerImpl implements ModelSerializer {
 			
 			if (nodes.contains(subjectNode)) {
 				SerializableNode node = nodes.get(nodes.indexOf(subjectNode));
-				if (predicate.toString().equals(RDF_TYPE)) {
+				if (isType) {
+					node.addFirstLiteral(literal);
 					node.setType(object.toString(model));
 					types.add(objectNode);
 				}
@@ -70,7 +76,10 @@ public class SimpleJsonModelSerializerImpl implements ModelSerializer {
 			}
 		}
 		
-		return new Graph(nodes, edges, prefixes, types);
+		OutputStream stream = new ByteArrayOutputStream();
+		model.write(stream, RDF_OUT_FORMAT);
+		
+		return new Graph(nodes, edges, prefixes, types, stream.toString());
 	}
 
 }
